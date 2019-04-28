@@ -19,12 +19,12 @@
 }
 
 .accessory-list > ul > li:hover {
-  border-color: #ee7a23;
+  border-color: #ab12f1;
   -webkit-transform: translateY(-5px);
   -ms-transform: translateY(-5px);
   transform: translateY(-5px);
   -webkit-box-shadow: 0 0 10px #999;
-  box-shadow: 0 0 10px #999;
+  box-shadow: 0 0 10px #ab12f1;
   -webkit-transition: all .5s ease-out;
   transition: all .5s ease-out;
 }
@@ -248,7 +248,7 @@
 }
 
 .filter dd a:hover, .filter dd .cur {
-  color: #ee7a23;
+  color: #da0fec;
 }
 
 .filter .filter-category ul {
@@ -302,7 +302,7 @@
 .filter .filter-price dd a:hover, .filter .filter-price dd .cur {
   -webkit-transition: padding-left .3s ease-out;
   transition: padding-left .3s ease-out;
-  border-left: 2px solid #ee7a23;
+  border-left: 2px solid #da0fec;
   padding-left: 15px;
 }
 
@@ -420,7 +420,7 @@
 }
 
 .filter-nav a.cur, .filter-nav a:hover {
-  color: #ee7a23;
+  color: #bc14f0;
 }
 
 .filter-nav .sort-up .icon-arrow-short {

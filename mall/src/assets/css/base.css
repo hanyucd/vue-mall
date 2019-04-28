@@ -425,16 +425,15 @@ a:hover {
 }
 
 /** the page max width **/
+.nav-breadcrumb-wrap {
+  background: #f0f0f0;
+}
+
 .container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 10px;
 }
-
-.nav-breadcrumb-wrap {
-  background: #f0f0f0;
-}
-
 
 /** 面包屑 **/
 .nav-breadcrumb {
@@ -458,11 +457,11 @@ a:hover {
 }
 
 .nav-breadcrumb a:hover {
-  color: #d1434a;
+  color: #961ee6;
 }
 
 .nav-breadcrumb span {
-  color: #d1434a;
+  color: #961ee6;
 }
 
 /** 普通页面标题 **/
@@ -612,15 +611,15 @@ a:hover {
   font-weight: bold;
   -webkit-transition: all .3s ease-out;
   transition: all .3s ease-out;
-  border: 1px solid #d1434a;
-  color: #d1434a;
+  border: 1px solid #b813da;
+  color: #b813da;
   text-transform: uppercase;
   letter-spacing: .25em;
   white-space: nowrap;
 }
 
 .btn:hover, .btn[href]:hover {
-  background-color: #ffe5e6;
+  background-color: #c890e9;
   -webkit-transition: all .3s ease-out;
   transition: all .3s ease-out;
 }
