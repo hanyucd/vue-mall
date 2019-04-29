@@ -16,7 +16,7 @@
             价格 
             <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg>
           </a>
-          <a href="javascript: void(0)" class="filterby stopPop" @click.stop="showFilterPop"></a>
+          <a href="javascript: void(0)" class="filterby stopPop" @click.stop="showFilterPop">价格过滤</a>
         </div>
 
         <div class="accessory-result">
@@ -40,7 +40,7 @@
                 <li v-for="(item, index) in goodsList" :key="index">
                   <div class="pic">
                     <a href="#">
-                      <img :src="'/static/' + item.prodcutImg" alt=""/>
+                      <img v-lazy="'/static/' + item.prodcutImg" alt=""/>
                     </a>
                   </div>
                   <div class="main">
@@ -57,6 +57,7 @@
         </div>
       </div>
     </section>
+    <article class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></article>
     <!-- 尾部说明 -->
     <nav-footer></nav-footer>
   </div>
@@ -77,8 +78,6 @@ export default {
   },
   data() {
     return {
-      goodsList: [],
-      sortFlag: true,
       priceFilter: [
         {
           startPrice:'0.00',
@@ -94,8 +93,11 @@ export default {
           endPrice:'5000.00'
         }
       ],
-      priceChecked:'all', // 当前选中哪个价格过滤区间
-      filterBy:false, // 按价格排序
+      goodsList: [],
+      sortFlag: true,
+      priceChecked: 'all', // 当前选中哪个价格过滤区间
+      filterBy: false, // 按价格排序
+      overLayFlag: false // 按价格排序遮罩层
     };
   },
   created() {
@@ -105,8 +107,27 @@ export default {
   },
   methods: {
     sortGoods() {},
-    showFilterPop() {},
-    setPriceFilter() {},
+    /*
+     * 显示按价格排序
+     */
+    showFilterPop() {
+      this.filterBy = true;
+      this.overLayFlag = true;
+    },
+    /* 
+     * 隐藏按价格排序
+     */
+    closePop() {
+      this.filterBy = false;
+      this.overLayFlag = false;
+    },
+    /*
+     * 点击价格过滤
+     */
+    setPriceFilter(index) {
+      this.priceChecked = index;
+      this.closePop();
+    },
     addCart(productId) {
       console.log(productId)
     }
