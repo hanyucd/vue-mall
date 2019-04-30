@@ -39,4 +39,12 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+// 使用 nodemon 热更新
+var debug = require('debug')('my-application'); // debug模块
+app.set('port', process.env.PORT || 3000); // 设定监听端口
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
+
+// module.exports = app;

@@ -21,7 +21,18 @@ mongoose.connection.on('disconnected', function() {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  Goods.find({}, function(err, docs) {
+  // req.query：获取路由中的查询参数
+  let page = parseInt(req.query.page, 10);
+  let pageSize = parseInt(req.query.pageSize, 10);
+  let sort = parseInt(req.query.sort, 10);
+  // 跳过的数据条数，(分页的公式).
+  let skip = (page - 1) * pageSize;
+  let params = {};
+  // 先查询所有，skip(skip)跳过skip条数据，limit(pageSize)一页多少条数据.即分页功能实现
+  let goodsModel = Goods.find(params).skip(skip).limit(pageSize);
+  // 对价格排序功能
+  goodsModel.sort({ 'salePrice': sort });
+  goodsModel.exec(function(err, docs) {
     if (err) {
       res.json({
         status: '1',
