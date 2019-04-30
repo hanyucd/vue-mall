@@ -13,12 +13,14 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-const express = require('express');
-const app = express();
-const router = express.Router();    // 拿到服务端的路由
-//有接口了就不用模拟数据了 mock模拟json数据
-const appData = require('../mock/goods.json');
-app.use('/', router);
+/* 
+  const express = require('express');
+  const app = express();
+  const router = express.Router();    // 拿到服务端的路由
+  //有接口了就不用模拟数据了 mock模拟json数据
+  const appData = require('../mock/goods.json');
+  app.use('/', router);
+*/
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -29,14 +31,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
-    before(app) {
-      app.get('/goods', (req, res) => {
-        res.json({
-          errorCode: 0,
-          data: appData
-        })
-      });
-    },
+    // before(app) {
+    //   app.get('/goods', (req, res) => {
+    //     res.json({
+    //       errorCode: 0,
+    //       data: appData
+    //     })
+    //   });
+    // },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
