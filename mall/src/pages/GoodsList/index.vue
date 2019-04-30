@@ -102,7 +102,7 @@ export default {
   },
   created() {
     axios.get('/goods').then(res => {
-      this.goodsList = res.data.result.list;
+      this.goodsList = res.data.result;
     })
   },
   methods: {

@@ -22,32 +22,35 @@ mongoose.connection.on('disconnected', function() {
 /* GET home page. */
 router.get('/', function(req, res, next) {
   // req.query：获取路由中的查询参数
-  let page = parseInt(req.query.page, 10);
-  let pageSize = parseInt(req.query.pageSize, 10);
-  let sort = parseInt(req.query.sort, 10);
-  // 跳过的数据条数，(分页的公式).
-  let skip = (page - 1) * pageSize;
+  let page = parseInt(req.query.page, 10); // 页数
+  let pageSize = parseInt(req.query.pageSize, 10); // 数据条数
+  let sort = parseInt(req.query.sort, 10); // 排序方式 (升序 || 降序)
+  let skip = (page - 1) * pageSize; // 跳过的数据条数 (分页的公式)
   let params = {};
-  // 先查询所有，skip(skip)跳过skip条数据，limit(pageSize)一页多少条数据.即分页功能实现
-  let goodsModel = Goods.find(params).skip(skip).limit(pageSize);
-  // 对价格排序功能
-  goodsModel.sort({ 'salePrice': sort });
-  goodsModel.exec(function(err, docs) {
-    if (err) {
-      res.json({
-        status: '1',
-        msg: err.message
-      })
-    } else {
-      res.json({
-        status: '0',
-        result: {
-          count: docs.length,
-          list: docs
-        }
-      })
-    }
-  });
+  Goods.find(params) // 先查询所有 | 返回 Query 的一个实例（可链式调用）
+    .skip(skip) // skip(skip)跳过 skip 条数据
+    .limit(pageSize) // limit(pageSize) 指定查询结果的最大条数
+    .sort({ 'salePrice': sort }) // 对价格排序功能
+    .exec(function(err, docs) { // exec(callback)
+      if (err) {
+        res.json({
+          status: '500',
+          msg: err.message
+        });
+      } else {
+        docs.length !== 0
+          ? res.json({
+              status: '200',
+              count: docs.length,
+              result: docs
+            })
+          : res.json({
+            status: '200',
+            count: docs.length,
+            result: '已没有数据!'
+          });
+      }
+    });
 });
 
 module.exports = router;
