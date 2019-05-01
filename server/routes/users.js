@@ -1,9 +1,30 @@
 var express = require('express');
+var Users = require('../models/users');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.post('/login', function(req, res, next) {
+  let filterParam = {
+    userName: req.body.userName,
+    userPwd: req.body.userPwd
+  };
+
+  Users.findOne(filterParam, function(error, userDoc) {
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      });
+    } else {
+      if (userDoc) {
+        res.json({
+          status: 200,
+          result: {
+            userName: userDoc.userName
+          }
+        });
+      }
+    }
+  });
 });
 
 module.exports = router;

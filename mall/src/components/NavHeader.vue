@@ -115,23 +115,23 @@ export default {
   },
   methods: {
     login() {
-      let data = {
+      let account = {
         userName: this.userName,
         userPwd: this.userPwd
       };
 
-      axios.post('/user/login', {
-        data
-      }).then(res => {
-        if (res.data.status === 200) {
-          this.errorTip = false;
-          // To do
-        } else {
-          this.errorTip = true;
-        }
-      }).catch(error => {
-        console.log(error);
-      })
+      axios.post('/users/login', account)
+        .then(res => {
+          console.log(res)
+          if (res.data.status === 200) {
+            this.errorTip = false;
+            // To do
+          } else {
+            this.errorTip = true;
+          }
+        }).catch(error => {
+          console.log(error);
+        })
     },
     closeLoginModal() {}
   }
