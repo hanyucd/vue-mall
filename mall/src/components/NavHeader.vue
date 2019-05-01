@@ -39,7 +39,7 @@
           <!-- 购物车图标 -->
           <div class="navbar-cart-container">
             <span class="navbar-cart-count" v-if="cartCount">{{ cartCount }}</span>
-            <a class="navbar-link navbar-cart-link" href="/#/cart">
+            <a class="navbar-link navbar-cart-link" href="/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
               </svg>
@@ -48,17 +48,92 @@
         </div>
       </div>
     </section>
+    <!-- 登录模态框 -->
+    <article class="md-modal modal-msg md-modal-transition" :class="{ 'md-show': loginModalStatus }">
+      <div class="md-modal-inner">
+        <!-- 标题 -->
+        <section class="md-top">
+          <div class="md-title">登录</div>
+          <button class="md-close" @click="loginModalStatus = false">Close</button>
+        </section>
+        <!-- 登录输入框 -->
+        <section class="md-content">
+          <div class="confirm-tips">
+            <div class="error-wrap">
+              <span class="error error-show" v-show="errorTip">用户名 或 密码错误</span>
+            </div>
+            <ul>
+              <li class="regi_form_input">
+                <i class="icon IconPeople"></i>
+                <input
+                  class="regi_login_input regi_login_input_left"
+                  type="text"
+                  name="loginname"
+                  v-model="userName"
+                  placeholder="请输入用户名..." 
+                  data-type="loginname" 
+                />
+              </li>
+              <li class="regi_form_input noMargin">
+                <i class="icon IconPwd"></i>
+                <input 
+                  class="regi_login_input regi_login_input_left login-input-no input_text" 
+                  type="password" 
+                  name="password" 
+                  v-model="userPwd" 
+                  placeholder="请输入密码..." 
+                  @keyup.enter="login">
+              </li>
+            </ul>
+          </div>
+          <!-- 登录按钮 -->
+          <div class="login-wrap">
+            <a href="javascript:;" class="btn-login" @click="login">登  录</a>
+          </div>
+        </section>
+      </div>
+    </article>
+    <!-- 模态框遮罩层 -->
+    <article class="md-overlay" v-if="loginModalStatus" @click="closeLoginModal"></article>
   </header>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'NavHeader',
   data () {
     return {
       nickName: '',
-      cartCount: 9
+      cartCount: 9,
+      userName: 'admin',
+      userPwd: '123456',
+      errorTip: false,
+      loginModalStatus: true  // 登录框状态：显示 || 隐藏
     }
+  },
+  methods: {
+    login() {
+      let data = {
+        userName: this.userName,
+        userPwd: this.userPwd
+      };
+
+      axios.post('/user/login', {
+        data
+      }).then(res => {
+        if (res.data.status === 200) {
+          this.errorTip = false;
+          // To do
+        } else {
+          this.errorTip = true;
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    closeLoginModal() {}
   }
 }
 </script>
