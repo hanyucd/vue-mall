@@ -3,11 +3,28 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 var goodsRouter = require('./routes/goods');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// 连接数据库 数据库的名称叫 vue_mall
+mongoose.connect('mongodb://127.0.0.1:27017/vue_mall');
+
+// 连接成功操作
+mongoose.connection.on('connected', function() {
+  console.log("MongooDB 连接成功.");
+});
+// 连接失败操作
+mongoose.connection.on('error', function() {
+  console.log("MongooDB 连接失败.");
+});
+// 连接断开操作
+mongoose.connection.on('disconnected', function() {
+  console.log("MongooDB 断开连接.");
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -17,6 +34,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.json());	// 解析 application/json
+app.use(bodyParser.urlencoded({ extended: false })); // 解析 application/x-www-form-urlencoded
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 一级路由

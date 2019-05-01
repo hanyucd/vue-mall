@@ -1,26 +1,10 @@
 var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
 var Goods = require('../models/goods');
-
-// 连接数据库 数据库的名称叫 vue_mall
-mongoose.connect('mongodb://127.0.0.1:27017/vue_mall');
-
-// 连接成功操作
-mongoose.connection.on('connected', function() {
-  console.log("MongooDB 连接成功.");
-});
-// 连接失败操作
-mongoose.connection.on('error', function() {
-  console.log("MongooDB 连接失败.");
-});
-// 连接断开操作
-mongoose.connection.on('disconnected', function() {
-  console.log("MongooDB 断开连接.");
-});
+var Users = require('../models/users');
+var router = express.Router();
 
 /**
- * /查询商品列表数据 | 分页逻辑
+ * 查询商品列表数据 | 分页逻辑
  */
 router.get('/', function(req, res, next) {
   // req.query：获取路由中的查询参数
@@ -64,6 +48,85 @@ router.get('/', function(req, res, next) {
         });
       }
     });
+});
+
+/**
+ * 加入到购物车
+ */
+router.post('/addCart', function(req, res, next) {
+  let userId = '100000077';
+  let productId = req.body.productId;
+
+  // 根据 userId 找到用户
+  Users.findOne({ userId }, function(error, userDoc) {
+    if (error) {
+      res.json({
+        status: '500',
+        msg: err.message
+      });
+    } else {
+      if (userDoc) {
+        let goodsItem = '';
+        // 遍历用户购物车，判断加入购物车的商品是否已经存在
+        userDoc.cartList.forEach(item => {
+          if (item.productId === productId) {
+            goodsItem = item;
+            item.productNum++; // 购物车这件商品数量 +1
+          }
+        });
+
+        if (goodsItem) {
+          // 若购物车该商品已存在 | 直接保存
+          userDoc.save(function(error, resultDoc) {
+            if (error) {
+              res.json({
+                status: 500,
+                msg: error.message
+              });
+            } else {
+              res.json({
+                status: 200,
+                msg: '',
+                result: 'success'
+              })
+            }
+          });
+        } else {
+          // 若购物车该商品不存在，就添加进去 | 根据商品 id 找到对应商品
+          Goods.findOne({ productId }, function(error, goodDoc) {
+            if (error) {
+              res.json({
+                status: '500',
+                msg: err.message
+              });
+            } else {
+              if (goodDoc) {
+                goodDoc.checked = 1;
+                goodDoc.productNum = 1;
+  
+                userDoc.cartList.push(goodDoc); // 添加信息到用户购物车列表中
+                // 保存数据库
+                userDoc.save(function(error, resultDoc) {
+                  if (error) {
+                    res.json({
+                      status: 500,
+                      msg: error.message
+                    });
+                  } else {
+                    res.json({
+                      status: 200,
+                      msg: '',
+                      result: 'success'
+                    });
+                  }
+                });
+              }
+            }
+          });
+        }
+      }
+    }
+  });
 });
 
 module.exports = router;

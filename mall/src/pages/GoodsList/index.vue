@@ -117,6 +117,9 @@ export default {
     this._getGoodsList();
   },
   methods: {
+    /**
+     * 获取商品数据
+     */
     _getGoodsList(append = false) {
       // 请求参数
       let params = {
@@ -149,7 +152,7 @@ export default {
         }
       });
     },
-    /*
+    /**
      * 点击排序商品
      */
     sortGoods() {
@@ -157,7 +160,7 @@ export default {
       this.page = 1; // 点击价格排序后从第一页开始
       this._getGoodsList();
     },
-    /*
+    /**
      * 加载更多
      */
     loadMore() {
@@ -167,21 +170,21 @@ export default {
         this._getGoodsList(true); // 滚动加载是累加数据，需要传参去请求数据的地方判断一下
       }, 500);
     },
-    /*
+    /**
      * 显示按价格排序
      */
     showFilterPop() {
       this.filterBy = true;
       this.overLayFlag = true;
     },
-    /* 
+    /** 
      * 隐藏按价格排序
      */
     closePop() {
       this.filterBy = false;
       this.overLayFlag = false;
     },
-    /*
+    /**
      * 点击价格过滤
      */
     setPriceFilter(index) {
@@ -189,8 +192,22 @@ export default {
       this.closePop();
       this._getGoodsList();
     },
+    /**
+     * 点击加入购物车
+     */
     addCart(productId) {
-      console.log(productId)
+      axios.post('/goods/addCart', {
+        productId
+      }).then(res => {
+        console.log(res)
+        if (res.data.status == 200) {
+          alert(res.data.result);
+        } else {
+          throw new Error('request fail.');
+        }
+      }).catch(error => {
+        console.log(error);
+      })
     }
   }
 };
