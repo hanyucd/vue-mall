@@ -37,7 +37,7 @@
           <div class="accessory-list-wrap">
             <div class="accessory-list col-4">
               <ul>
-                <li v-for="(item, index) in goodsList" :key="index">
+                <li v-for="item of goodsList" :key="item._id">
                   <div class="pic">
                     <a href="#">
                       <img v-lazy="'/static/' + item.productImage" alt=""/>
@@ -122,7 +122,8 @@ export default {
       let params = {
         page: this.page,
         pageSize: this.pageSize,
-        sort: this.sortFlag ? 1 : -1
+        sort: this.sortFlag ? 1 : -1, // sortFlag 为 true 升序
+        priceLevel: this.priceChecked // 点击的价格区间
       };
       this.loading = true; // 显示加载
       
@@ -154,7 +155,7 @@ export default {
     sortGoods() {
       this.sortFlag = !this.sortFlag;
       this.page = 1; // 点击价格排序后从第一页开始
-      this._getGoodsList(true);
+      this._getGoodsList();
     },
     /*
      * 加载更多
@@ -186,6 +187,7 @@ export default {
     setPriceFilter(index) {
       this.priceChecked = index;
       this.closePop();
+      this._getGoodsList();
     },
     addCart(productId) {
       console.log(productId)
