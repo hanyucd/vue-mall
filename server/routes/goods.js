@@ -31,24 +31,18 @@ router.get('/', function(req, res, next) {
     .skip(skip) // skip(skip)跳过 skip 条数据
     .limit(pageSize) // limit(pageSize) 指定查询结果的最大条数
     .sort({ 'salePrice': sort }) // 对价格排序功能
-    .exec(function(err, docs) { // exec(callback)
+    .exec(function(err, docs) { // exec(callback) 执行查询
       if (err) {
         res.json({
           status: '500',
           msg: err.message
         });
       } else {
-        docs.length !== 0
-          ? res.json({
-              status: '200',
-              count: docs.length,
-              result: docs
-            })
-          : res.json({
-            status: '200',
-            count: docs.length,
-            result: '已没有数据!'
-          });
+        res.json({
+          status: '200',
+          count: docs.length,
+          result: docs
+        });
       }
     });
 });
