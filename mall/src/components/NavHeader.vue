@@ -34,8 +34,8 @@
       <div class="navbar-right-container" style="display: flex;">
         <div class="navbar-menu-container">
           <span class="navbar-link" v-if="nickName">{{ nickName }}</span>
-          <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">登录</a>
-          <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-else>注销</a>
+          <a href="javascript:void(0)" class="navbar-link" @click="loginModalStatus = true" v-if="!nickName">登录</a>
+          <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-else>登出</a>
           <!-- 购物车图标 -->
           <div class="navbar-cart-container">
             <span class="navbar-cart-count" v-if="cartCount">{{ cartCount }}</span>
@@ -110,11 +110,19 @@ export default {
       userName: 'admin',
       userPwd: '123456',
       errorTip: false,
-      loginModalStatus: true  // 登录框状态：显示 || 隐藏
+      loginModalStatus: false  // 登录框状态：显示 || 隐藏
     }
   },
   methods: {
+    /**
+     * 登录
+     */
     login() {
+      if (!this.userName || !this.userPwd) {
+        // 用户名 || 密码 为空执行
+        this.errorTip = true;
+        return;
+      }
       let account = {
         userName: this.userName,
         userPwd: this.userPwd
@@ -125,11 +133,24 @@ export default {
           console.log(res)
           if (res.data.status === 200) {
             this.errorTip = false;
-            // To do
+            this.loginModalStatus = false;
+            this.nickName = res.data.result.userName;
           } else {
             this.errorTip = true;
           }
         }).catch(error => {
+          console.log(error);
+        })
+    },
+    /**
+     * 登出 
+     */
+    logOut() {
+      axios.post('/users/logout')
+        .then(res => {
+          (res.data.status === 200) && (this.nickName = '');
+        })
+        .catch(error => {
           console.log(error);
         })
     },
