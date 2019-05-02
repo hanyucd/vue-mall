@@ -73,4 +73,32 @@ router.get('/checkLogin', function(req, res, next) {
   }
 });
 
+/**
+ * 查询当前用户的购物车数据
+ */
+router.get('/cartLists', function(req, res, next) {
+  if (req.cookies && req.cookies.userId) {
+    let userId = req.cookies.userId;
+
+    Users.findOne({ userId }, function(error, userDoc) {
+      if (error) {
+        res.json({
+          status: 500,
+          msg: error.message
+        });
+      } else {
+        res.json({
+          status: 200,
+          result: userDoc.cartList
+        });
+      }
+    });
+  } else {
+    res.json({
+      status: 401,
+      result: '当前用户不存在'
+    })
+  }
+});
+
 module.exports = router;
