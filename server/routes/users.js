@@ -116,4 +116,33 @@ router.post('/cartDel', function(req, res, next) {
   });
 });
 
+/**
+ * 修改商品数量 和 勾选接口
+ */
+router.post('/cartEdit', function(req, res, next) {
+  let userId = req.cookies.userId;
+  let productId = req.body.productId;
+  let productNum = req.body.productNum;
+  let checked = req.body.checked;
+
+  // 更新数据
+  Users.update(
+    { userId, 'cartList.productId': productId }, 
+    { 'cartList.$.productNum': productNum },
+    { 'cartList.$.checked': checked },
+    function(error, userDoc) {
+      if (error) {
+        res.json({
+          status: 500,
+          msg: error.message
+        });
+      } else {
+        res.json({
+          status: 200,
+          result: 'success'
+        });
+      }
+    });
+});
+
 module.exports = router;

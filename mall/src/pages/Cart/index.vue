@@ -70,7 +70,7 @@
                 <!-- 第一列 -->
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn" v-bind:class="{ 'check': item.checked == '1'}" @click="editCart('checked', item)">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{ 'check': item.checked == '1'}" @click="editCart('checked', item)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -92,7 +92,7 @@
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub" @click="editCart('minu', item)">-</a>
+                        <a class="input-sub" @click="editCart('reduce', item)">-</a>
                         <span class="select-ipt">{{ item.productNum }}</span>
                         <a class="input-add" @click="editCart('add', item)">+</a>
                       </div>
@@ -197,6 +197,35 @@ export default {
             if (res.data.status === 200) {
               this.modalConfirm = false; // 关闭模态框
               this._getCartLists(); // 重新获取购物车数据
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      },
+      /**
+       * 处理商品加减 和 勾选
+       */
+      editCart(flag, item) {
+        if (flag === 'add') {
+          // 添加商品数量
+          item.productNum++
+        } else if (flag == 'reduce') {
+          // 减少商品数量
+          if (item.productNum <= 1) return;
+          item.productNum--;
+        } else {
+          // 控制商品是否选中
+          item.checked = (item.checked === '1') ? '0' : '1';
+        }
+
+        axios.post('/users/cartEdit', {
+          productId: item.productId,
+          productNum: item.productNum,
+          checked: item.checked
+        })
+          .then(res => {
+            if (res.data.status === 200) {
             }
           })
           .catch(error => {
