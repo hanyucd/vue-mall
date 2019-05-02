@@ -117,6 +117,29 @@
             </ul>
           </div>
         </section>
+
+        <section class="cart-foot-wrap">
+          <div class="cart-foot-inner">
+            <div class="cart-foot-l">
+              <div class="item-all-check">
+                <a href="javascipt:;" @click="toggleCheckAll">
+                  <span class="checkbox-btn item-check-btn" :class="{ 'check': checkAllFlag }">
+                      <svg class="icon icon-ok"><use xlink:href="#icon-ok"/></svg>
+                  </span>
+                  <span>全选</span>
+                </a>
+              </div>
+            </div>
+            <div class="cart-foot-r">
+              <div class="item-total">
+                总价: <span class="total-price">{{ }}</span>
+              </div>
+              <div class="btn-wrap">
+                <a class="btn btn--red" :class="{ 'btn--dis': 0 == 0 }" @click="checkOut">结算</a>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </section>
     <!-- 删除模态框 -->
@@ -151,7 +174,8 @@ export default {
     return {
       cartLists: [], // 购物车商品列表
       delItem: {}, // 要删除的商品
-      modalConfirm: false // 模态框是否显示
+      modalConfirm: false, // 模态框是否显示
+      checkAllFlag: true
     }
   },
   created() {
@@ -231,7 +255,9 @@ export default {
           .catch(error => {
             console.log(error);
           });
-      }
+      },
+      toggleCheckAll() {},
+      checkOut() {}
   }
 }
 </script>
