@@ -66,6 +66,30 @@
         </div>
       </div>
     </section>
+
+    <!-- 模态框 -->
+    <modal :mdShow="mdShow" v-on:close="closeModal">
+      <p slot="message">
+        请先登录, 否则无法加入到购物车中!
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="mdShow = false">关闭</a>
+      </div>
+    </modal>
+    <!-- 购物模态框 -->
+    <modal :mdShow="mdShowCart" v-on:close="closeModal">
+      <p slot="message">
+        <svg class="icon-status-ok">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-status-ok"></use>
+        </svg>
+        <span>加入购物车成功</span>
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="mdShowCart = false">继续购物</a>
+        <router-link class="btn btn--m btn--red" to="/cart">查看购物车</router-link>
+      </div>
+    </modal>
+
     <article class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></article>
     <!-- 尾部说明 -->
     <nav-footer></nav-footer>
@@ -76,6 +100,7 @@
 import NavHeader from '@/components/NavHeader';
 import NavBread from '@/components/NavBread';
 import NavFooter from '@/components/NavFooter';
+import Modal from '@/components/Modal';
 import axios from 'axios';
 
 export default {
@@ -83,7 +108,8 @@ export default {
   components: {
     NavHeader,
     NavBread,
-    NavFooter
+    NavFooter,
+    Modal
   },
   data() {
     return {
@@ -110,7 +136,9 @@ export default {
       filterBy: false, // 按价格菜单显示
       overLayFlag: false, // 遮罩层显示
       busy: true, // 滚动加载插件默认禁用
-      loading: false // 往下滚动"加载图标"的出现效果
+      loading: false, // 往下滚动"加载图标"的出现效果
+      mdShow: false, // 未登录的模态框是否显示
+      mdShowCart: false, // 已登录的模态框是否显示
     };
   },
   created() {
@@ -183,6 +211,7 @@ export default {
     closePop() {
       this.filterBy = false;
       this.overLayFlag = false;
+      this.mdShowCart = false;
     },
     /**
      * 点击价格过滤
@@ -199,15 +228,24 @@ export default {
       axios.post('/goods/addCart', {
         productId
       }).then(res => {
-        console.log(res)
-          alert(res.data.result);
         if (res.data.status == 200) {
+          // 加入购物车成功，成功的模态框显示
+          this.mdShowCart = true;
         } else {
+          // 未登录模态框显示
+          this.mdShow = true;
           throw new Error('request fail.');
         }
       }).catch(error => {
         console.log(error);
       });
+    },
+    /**
+     * 关闭模态框
+     */
+    closeModal() {
+      this.mdShow = false; // 未登录模态框消失
+      this.mdShowCart = false; // 登录模态框消失
     }
   }
 };

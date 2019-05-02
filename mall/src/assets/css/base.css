@@ -625,14 +625,14 @@ a:hover {
 }
 
 .btn--red, .btn--red[href] {
-  background-color: #d1434a;
-  border-color: #d1434a;
+  background-color: #941dda;
+  border-color: #941dda;
   color: #fff;
 }
 
 .btn--red:hover, .btn--red[href]:hover {
-  background-color: #f16f75;
-  border-color: #f16f75;
+  background-color: #cc60f7;
+  border-color: #cc60f7;
   color: #fff;
 }
 
