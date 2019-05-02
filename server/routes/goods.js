@@ -6,7 +6,7 @@ var router = express.Router();
 /**
  * 查询商品列表数据 | 分页逻辑
  */
-router.get('/', function(req, res, next) {
+router.get('/list', function(req, res, next) {
   // req.query：获取路由中的查询参数
   let page = parseInt(req.query.page, 10) || 1; // 页数
   let pageSize = parseInt(req.query.pageSize, 10) || 8; // 数据条数

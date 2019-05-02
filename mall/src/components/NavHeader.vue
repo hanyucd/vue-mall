@@ -113,7 +113,24 @@ export default {
       loginModalStatus: false  // 登录框状态：显示 || 隐藏
     }
   },
+  created() {
+    this._checkLogin();
+  },
   methods: {
+    /**
+     * 校验是否登录
+     */
+    _checkLogin() {
+      axios.get('/users/checkLogin')
+        .then(res => {
+          if (res.data.status === 200) {
+            this.nickName = res.data.result;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     /**
      * 登录
      */
@@ -130,7 +147,6 @@ export default {
 
       axios.post('/users/login', account)
         .then(res => {
-          console.log(res)
           if (res.data.status === 200) {
             this.errorTip = false;
             this.loginModalStatus = false;
@@ -138,7 +154,8 @@ export default {
           } else {
             this.errorTip = true;
           }
-        }).catch(error => {
+        })
+        .catch(error => {
           console.log(error);
         })
     },

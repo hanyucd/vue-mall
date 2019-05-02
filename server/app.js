@@ -38,6 +38,24 @@ app.use(bodyParser.json());	// 解析 application/json
 app.use(bodyParser.urlencoded({ extended: false })); // 解析 application/x-www-form-urlencoded
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * 捕获登录状态
+ */
+app.use(function(req, res, next) {
+  if (req.cookies.userId) {
+    next();
+  } else {
+    if (req.originalUrl === '/users/login' || req.originalUrl === 'users/logout' || req.originalUrl.indexOf('/goods/list') > -1) {
+      next();
+    } else {
+      res.json({
+        status: 401,
+        result: '当前未登录'
+      });
+    }
+  }
+});
+
 // 一级路由
 app.use('/goods', goodsRouter);
 app.use('/users', usersRouter);

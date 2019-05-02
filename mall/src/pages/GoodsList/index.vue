@@ -130,7 +130,7 @@ export default {
       };
       this.loading = true; // 显示加载
       
-      axios.get('/goods', {
+      axios.get('/goods/list', {
         params
       }).then(res => {
         if (res.data.status === '200') {
@@ -200,8 +200,8 @@ export default {
         productId
       }).then(res => {
         console.log(res)
-        if (res.data.status == 200) {
           alert(res.data.result);
+        if (res.data.status == 200) {
         } else {
           throw new Error('request fail.');
         }

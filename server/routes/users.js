@@ -19,12 +19,17 @@ router.post('/login', function(req, res, next) {
       });
     } else {
       if (userDoc) {
-        // 服务端设置 cookie | maxAge：cookie 过期时间 1 小时
+        // cookie 存储用户 id | 服务端设置 cookie, maxAge：cookie 过期时间 1 小时
         res.cookie('userId', userDoc.userId, {
           path: '/',
           maxAge: 1000 * 60 * 60
         });
-        // req.session.user = userDoc;
+        // cookie 存储用户名
+        res.cookie('userName', userDoc.userName, {
+          path: '/',
+          maxAge: 1000 * 60 * 60
+        });
+
         res.json({
           status: 200,
           result: {
@@ -49,6 +54,23 @@ router.post('/logout', function(req, res, next) {
     status: 200,
     result: '退出登录'
   });
+});
+
+/**
+ * 校验是否登录接口
+ */
+router.get('/checkLogin', function(req, res, next) {
+  if (req.cookies.userId) {
+    res.json({
+      status: 200,
+      result: req.cookies.userName || ''
+    })
+  } else {
+    res.json({
+      status: 401,
+      result: '未登录'
+    });
+  }
 });
 
 module.exports = router;
