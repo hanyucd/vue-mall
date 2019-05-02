@@ -77,28 +77,43 @@ router.get('/checkLogin', function(req, res, next) {
  * 查询当前用户的购物车数据
  */
 router.get('/cartLists', function(req, res, next) {
-  if (req.cookies && req.cookies.userId) {
-    let userId = req.cookies.userId;
+  let userId = req.cookies.userId; // 获取用户Id
 
-    Users.findOne({ userId }, function(error, userDoc) {
-      if (error) {
-        res.json({
-          status: 500,
-          msg: error.message
-        });
-      } else {
-        res.json({
-          status: 200,
-          result: userDoc.cartList
-        });
-      }
-    });
-  } else {
-    res.json({
-      status: 401,
-      result: '当前用户不存在'
-    })
-  }
+  Users.findOne({ userId }, function(error, userDoc) {
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      });
+    } else {
+      res.json({
+        status: 200,
+        result: userDoc.cartList
+      });
+    };
+  });
+});
+
+/**
+ * 购物车删除功能
+ */
+router.post('/cartDel', function(req, res, next) {
+  let userId = req.cookies.userId;
+  let productId = req.body.productId;
+  // 数组修改器：向数组中删除指定元素
+  Users.update({ userId }, { $pull: { 'cartList': { productId } } }, function(error, UserDoc) {
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      });
+    } else {
+      res.json({
+        status: 200,
+        result: 'success'
+      });
+    }
+  });
 });
 
 module.exports = router;

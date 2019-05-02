@@ -119,6 +119,14 @@
         </section>
       </div>
     </section>
+    <!-- 删除模态框 -->
+    <modal :mdShow="modalConfirm" v-on:close="closeModal">
+      <p slot="message">你确认要删除此商品吗?</p>
+      <div slot="btnGroup">
+        <a href="javascript:;" class="btn btn--m" @click="delCart">确认</a>
+        <a href="javascript:;" class="btn btn--m" @click="modalConfirm = false">关闭</a>
+      </div>
+    </modal>
     <!-- 底部组件 -->
     <nav-footer></nav-footer>
   </div>
@@ -132,6 +140,7 @@ import Modal from '@/components/Modal';
 import axios from 'axios';
 
 export default {
+  name: 'Cart',
   components: {
     NavHeader,
     NavBread,
@@ -163,7 +172,37 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    }
+    },
+    /**
+     * 关闭模态框 | 处理子组件派发的事件
+     */
+      closeModal() {
+        this.modalConfirm = false;
+      },
+      /**
+       *  点击删除图标 | 弹出确认删除模态框
+       */
+      delCartConfirm(item) {
+        this.delItem = item;
+        this.modalConfirm = true;  // 模态框显示
+      },
+      /**
+       * 点击确认删除此商品
+       */
+      delCart() {
+        // 该商品 id
+        let productId = this.delItem.productId;
+        axios.post('/users/cartDel', { productId })
+          .then(res => {
+            if (res.data.status === 200) {
+              this.modalConfirm = false; // 关闭模态框
+              this._getCartLists(); // 重新获取购物车数据
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
   }
 }
 </script>
