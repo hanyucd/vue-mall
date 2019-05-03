@@ -10,6 +10,7 @@ const GoodsList = () => import('@/pages/GoodsList'); // 商品列表
 const Cart = () => import('@/pages/Cart'); // 购物车列表
 const Address = () => import('@/pages/Address'); // 购物车列表
 const Order = () => import('@/pages/Order'); // 订单列表
+const OrderSuc = () => import('@/pages/OrderSuc'); // 订单成功
 
 export default new Router({
   mode: 'history',
@@ -34,5 +35,10 @@ export default new Router({
       name: 'Order',
       component: Order
     },
+    {
+      path: '/orderSuc',
+      name: 'OrderSuc',
+      component: OrderSuc
+    }
   ]
 });

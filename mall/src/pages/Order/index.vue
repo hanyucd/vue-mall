@@ -198,7 +198,10 @@ export default {
       axios.post('/users/payMent', { addressId, orderTotal: this.orderTotal })
         .then(res => {
           if (res.data.status === 200) {
-            console.log(res.data.result)
+            this.$router.push({
+              path: 'orderSuc',
+              query: { orderId: res.data.result.orderId }
+            });
           }
         })
         .catch(error => {
