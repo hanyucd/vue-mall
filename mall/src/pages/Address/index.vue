@@ -66,10 +66,10 @@
             <ul>
               <li 
                 :class="{ 'check': checkIndex == index}" 
-                v-for="(item, index) in addressList" 
+                v-for="(item, index) in addressListFilter" 
                 :key="item.addressId"
-                @click="checkIndex = index; selectedAddrId = item.addressId"
-                >
+                @click="checkIndex = index; selectAddressId = item.addressId"
+              >
                 <dl>
                   <dt><span style="color: #999">收件人：</span>{{ item.userName }}</dt>
                   <dd class="address"><span style="color: #999">地址：</span>{{ item.streetName }}</dd>
@@ -97,7 +97,7 @@
           </div>
           <!-- more -->
           <div class="shipping-addr-more">
-            <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expand" :class="{ 'open': limit > 3}">
+            <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expand" :class="{ 'open': limit > 3 }">
               more
               <i class="i-up-down">
                 <i class="i-up-down-l"></i>
@@ -140,7 +140,7 @@
       </p>
       <div slot="btnGroup">
         <a class="btn btn--m" href="javascript:;" @click="delAddress">确认</a>
-        <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow=false">取消</a>
+        <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow = false">取消</a>
       </div>
     </modal>
     <!-- 底部组件 -->
@@ -169,9 +169,15 @@ export default {
       limit: 3, // 限制默认显示3个地址
       checkIndex: 0, // 选中的地址索引
       isMdShow: false, // 模态框的显示设置
-      addressId: '', // 地址id的存储，用于请求传参
+      addressId: '', // 地址 id 的存储，用于请求传参
       selectAddressId: '' // 选中的地址 id 存储, 用于点击 Next 跳转到订单确认页面传参
     };
+  },
+  computed: {
+    // 默认显示 3 条数据
+    addressListFilter() {
+      return this.addressList.slice(0, this.limit);
+    }
   },
   created() {
     this._getAddressList();
@@ -191,11 +197,56 @@ export default {
           console.log(error);
         });
     },
-    delAddressConfirm() {},
-    setDefault() {},
-    expand() {},
-    delAddress() {},
-    closeModal() {}
+    /**
+     * 设置默认地址
+     */
+    setDefault(addressId) {
+      axios.post('/users/setDefault', { addressId })
+        .then(res => {
+          if (res.data.status === 200) {
+            this._getAddressList();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    },
+    /**
+     * 点击 more 展开更多
+     */
+    expand() {
+      (this.limit === 3)
+        ? this.limit = this.addressList.length
+        : this.limit = 3;
+    },
+    /**
+     * 点击删除图标，模态框出现
+     */
+    delAddressConfirm(addressId) {
+      this.isMdShow = true;
+      this.addressId = addressId; // 地址 id 赋值
+    },
+    /**
+     * 确认删除地址
+     */
+    delAddress() {
+      axios.post('/users/delAddress', { addressId: this.addressId })
+        .then(res => {
+          if (res.data.status === 200) {
+            this.isMdShow = false;
+            this._getAddressList();  // 重新渲染地址
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    /**
+     * 关闭模态窗
+     */
+    closeModal() {
+      this.isMdShow = false;
+    },
   }
 };
 </script>

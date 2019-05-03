@@ -201,4 +201,62 @@ router.get('/addressList', function(req, res, next) {
   });
 });
 
+/**
+ * 设置默认地址接口
+ */
+router.post('/setDefault', function(req, res, next) {
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+
+  Users.findOne({ userId }, function(error, userDoc) {
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      });
+    } else {
+      userDoc.addressList.forEach(item => {
+        (item.addressId === addressId)
+        ? item.isDefault = true
+        : item.isDefault = false;
+      });
+      userDoc.save(function(error, userDoc) {
+        if (error) {
+          res.json({
+            status: 500,
+            msg: error.message
+          });
+        } else {
+          res.json({
+            status: 200,
+            result: 'success'
+          });
+        }
+      });
+    }
+  });
+});
+
+/**
+ * 删除地址接口
+ */
+router.post('/delAddress', function(req, res, next){
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+  // 数组修改器：向数组中删除指定元素
+  Users.update({ userId }, { $pull: { 'addressList': { addressId } } }, function(error, useDoc) {
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      });
+    } else {
+      res.json({
+        status: 200,
+        result: 'success'
+      });
+    }
+  });
+});
+
 module.exports = router;
