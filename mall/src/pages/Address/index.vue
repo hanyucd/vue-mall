@@ -65,9 +65,9 @@
           <div class="addr-list">
             <ul>
               <li 
-                :class="{ 'check': checkIndex == index}" 
                 v-for="(item, index) in addressListFilter" 
                 :key="item.addressId"
+                :class="{ 'check': checkIndex == index}" 
                 @click="checkIndex = index; selectAddressId = item.addressId"
               >
                 <dl>
@@ -191,6 +191,10 @@ export default {
         .then(res => {
           if (res.data.status === 200) {
             this.addressList = res.data.result;
+            // 获取默认地址
+            this.addressList.forEach(item => {
+              (item.isDefault) && (this.selectAddressId = item.addressId);
+            });
           }
         })
         .catch(error => {

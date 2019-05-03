@@ -278,7 +278,8 @@ export default {
         })
           .then(res => {
             if (res.data.status === 200) {
-              this.$store.commit('updateCartCount', flag === 'add' ? 1 : -1);
+              (flag !== 'checked') 
+                && this.$store.commit('updateCartCount', flag === 'add' ? 1 : -1);
             }
           })
           .catch(error => {

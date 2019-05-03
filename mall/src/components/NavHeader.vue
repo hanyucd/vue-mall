@@ -183,7 +183,10 @@ export default {
     logOut() {
       axios.post('/users/logout')
         .then(res => {
-          (res.data.status === 200) && (this.$store.commit('updateUserInfo', ''));
+          if (res.data.status === 200) {
+            this.$store.commit('updateUserInfo', '');
+            this.$store.commit('initCartCount', 0);
+          };
         })
         .catch(error => {
           console.log(error);
