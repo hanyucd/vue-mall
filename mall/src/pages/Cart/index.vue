@@ -85,7 +85,7 @@
                 </div>
                 <!-- 第二列 -->
                 <div class="cart-tab-2">
-                  <div class="item-price">{{ item.salePrice }}</div>
+                  <div class="item-price">{{ item.salePrice | currency('￥') }}</div>
                 </div>
                 <!-- 第三列 -->
                 <div class="cart-tab-3">
@@ -101,7 +101,7 @@
                 </div>
                 <!-- 第四列 -->
                 <div class="cart-tab-4">
-                  <div class="item-price-total">{{ (item.productNum * item.salePrice) }}</div>
+                  <div class="item-price-total">{{ (item.productNum * item.salePrice) | currency('￥') }}</div>
                 </div>
                 <!-- 第五列 -->
                 <div class="cart-tab-5">
@@ -117,7 +117,7 @@
             </ul>
           </div>
         </section>
-
+        <!-- 底部结算 -->
         <section class="cart-foot-wrap">
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
@@ -132,10 +132,10 @@
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
-                总价: <span class="total-price">{{ }}</span>
+                总价: <span class="total-price">{{ totalPrice | currency('￥') }}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" :class="{ 'btn--dis': 0 == 0 }" @click="checkOut">结算</a>
+                <a class="btn btn--red" :class="{ 'btn--dis': 0 }" @click="checkOut">结算</a>
               </div>
             </div>
           </div>
@@ -160,6 +160,7 @@ import NavHeader from '@/components/NavHeader';
 import NavBread from '@/components/NavBread';
 import NavFooter from '@/components/NavFooter';
 import Modal from '@/components/Modal';
+import { currency } from '@/util/currency'  // 对价格格式化的通用方法
 import axios from 'axios';
 
 export default {
@@ -175,8 +176,33 @@ export default {
       cartLists: [], // 购物车商品列表
       delItem: {}, // 要删除的商品
       modalConfirm: false, // 模态框是否显示
-      checkAllFlag: true
     }
+  },
+  computed: {
+    // 是否全选属性
+    checkAllFlag() {
+      return this.checkedCount === this.cartLists.length;
+    },
+    // 获取已勾选的商品种数
+    checkedCount() {
+      let count = 0;
+      this.cartLists.forEach(item => {
+        (item.checked === '1') && ++count;
+      });
+      return count;
+    },
+    // 计算总价格
+    totalPrice() {
+      let money = 0;
+      this.cartLists.forEach(item => {
+        (item.checked === '1')
+          && (money += parseInt(item.productNum, 10) * parseFloat(item.salePrice, 10));
+      });
+      return money;
+    }
+  },
+  filters: {
+    currency
   },
   created() {
     this._getCartLists();
@@ -256,7 +282,25 @@ export default {
             console.log(error);
           });
       },
-      toggleCheckAll() {},
+      /**
+       * 全选 || 取消全选
+       */
+      toggleCheckAll() {
+        let toggleAll = !this.checkAllFlag;
+        this.cartLists.forEach(item => {
+          item.checked = toggleAll ? '1' : '0';
+        });
+
+        axios.post('users/editCheckAll', { checkedAll: toggleAll })
+          .then(res => {
+            if (res.data.status === 200) {
+              console.log('全选成功');
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      },
       checkOut() {}
   }
 }
