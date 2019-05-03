@@ -126,7 +126,7 @@
         <section class="next-btn-wrap">
           <router-link 
             class="btn btn--m btn--red"
-            :to="{ path: 'orderConfirm', query: { 'addressId': selectAddressId } }"
+            :to="{ path: 'order', query: { 'addressId': selectAddressId } }"
           >
             下一步
           </router-link>
@@ -149,8 +149,8 @@
 </template>
 
 <script>
-import NavHeader from '@/components/NavHeader';  
-import NavFooter from '@/components/NavFooter';  
+import NavHeader from '@/components/NavHeader'; 
+import NavFooter from '@/components/NavFooter';
 import NavBread from '@/components/NavBread';
 import Modal from '@/components/Modal';
 import axios from 'axios';
@@ -246,7 +246,7 @@ export default {
      */
     closeModal() {
       this.isMdShow = false;
-    },
+    }
   }
 };
 </script>

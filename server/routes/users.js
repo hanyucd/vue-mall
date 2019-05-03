@@ -2,6 +2,8 @@ var express = require('express');
 var Users = require('../models/users');
 var router = express.Router();
 
+require('../util/util');
+
 /**
  * 登录处理
  */
@@ -254,6 +256,74 @@ router.post('/delAddress', function(req, res, next){
       res.json({
         status: 200,
         result: 'success'
+      });
+    }
+  });
+});
+
+/**
+ * 创建订单功能
+ */
+router.post('/payMent', function(req, res, next) {
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+  let orderTotal = req.body.orderTotal;
+
+  Users.findOne({ userId }, function(error, userDoc){
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      })
+    } else {
+      let address = '';
+      // 获取当前用户的地址信息
+      userDoc.addressList.forEach(item => {
+        (item.addressId === addressId)
+          && (address = item);
+      });
+      //获取用户购物车的购买商品
+      let goodsList = userDoc.cartList.filter(item => {
+        return item.checked == '1';
+      });
+
+      // 创建订单 Id
+      let platformCode = '852';
+      let randomCode_1 = Math.floor(Math.random() * 10);
+      let randomCode_2 = Math.floor(Math.random() * 10);
+      let sysDate = new Date().Format('yyyyMMddhhmmss');  // 系统时间：年月日时分秒
+      let orderId = platformCode + randomCode_1 + sysDate + randomCode_2;  // 21位
+
+      // 订单创建时间
+      let createDate = new Date().Format('yyyy-MM-dd hh:mm:ss');
+
+      // 订单
+      let order = {
+        orderId,         // 订单id
+        orderTotal,      // 订单总金额(直接拿前端传过来的参数)
+        address,         // 地址信息
+        goodsList,       // 购买的商品信息
+        createDate,      // 订单创建时间
+        orderStatus: '1' // 订单状态，1 成功
+      };
+      // 订单信息存储到数据库
+      userDoc.orderList.push(order);
+      userDoc.save(function(error, userDoc) {
+        if (error) {
+          res.json({
+            status: 500,
+            msg: error.message
+          });
+        } else {
+          res.json({
+            status: 200,
+            result: {
+              orderId: order.orderId,
+              orderTotal: order.orderTotal,
+              createDate: order.createDate
+            }
+          });
+        }
       });
     }
   });

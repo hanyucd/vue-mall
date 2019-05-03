@@ -216,7 +216,6 @@ export default {
         .then(res => {
           if (res.data.status === 200) {
             this.cartLists = res.data.result;
-            console.log(this.cartLists)
           }
         })
         .catch(error => {

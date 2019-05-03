@@ -9,6 +9,7 @@ Vue.use(Router);
 const GoodsList = () => import('@/pages/GoodsList'); // 商品列表
 const Cart = () => import('@/pages/Cart'); // 购物车列表
 const Address = () => import('@/pages/Address'); // 购物车列表
+const Order = () => import('@/pages/Order'); // 订单列表
 
 export default new Router({
   mode: 'history',
@@ -27,6 +28,11 @@ export default new Router({
       path: '/address',
       name: 'Address',
       component: Address
-    }
+    },
+    {
+      path: '/order',
+      name: 'Order',
+      component: Order
+    },
   ]
 });
