@@ -246,6 +246,9 @@ export default {
             if (res.data.status === 200) {
               this.modalConfirm = false; // 关闭模态框
               this._getCartLists(); // 重新获取购物车数据
+              
+              var delCount = this.delItem.productNum; // 右上角购物车数量更新
+              this.$store.commit("updateCartCount", -delCount);
             }
           })
           .catch(error => {
@@ -275,6 +278,7 @@ export default {
         })
           .then(res => {
             if (res.data.status === 200) {
+              this.$store.commit('updateCartCount', flag === 'add' ? 1 : -1);
             }
           })
           .catch(error => {

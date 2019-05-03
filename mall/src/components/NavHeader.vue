@@ -94,19 +94,18 @@
       </div>
     </article>
     <!-- 模态框遮罩层 -->
-    <article class="md-overlay" v-if="loginModalStatus" @click="closeLoginModal"></article>
+    <article class="md-overlay" v-if="loginModalStatus" @click="loginModalStatus = false"></article>
   </header>
 </template>
 
 <script>
 import axios from 'axios';
+import { mapState } from 'vuex';
 
 export default {
   name: 'NavHeader',
   data () {
     return {
-      nickName: '',
-      cartCount: 9,
       userName: 'admin',
       userPwd: '123456',
       errorTip: false,
@@ -116,6 +115,9 @@ export default {
   created() {
     this._checkLogin();
   },
+  computed: {
+    ...mapState(['nickName', 'cartCount'])
+  },
   methods: {
     /**
      * 校验是否登录
@@ -124,7 +126,8 @@ export default {
       axios.get('/users/checkLogin')
         .then(res => {
           if (res.data.status === 200) {
-            this.nickName = res.data.result;
+            this.$store.commit('updateUserInfo', res.data.result);
+             this._getCartCount();
           }
         })
         .catch(error => {
@@ -150,7 +153,8 @@ export default {
           if (res.data.status === 200) {
             this.errorTip = false;
             this.loginModalStatus = false;
-            this.nickName = res.data.result.userName;
+            this.$store.commit('updateUserInfo', res.data.result.userName);
+            this._getCartCount();
           } else {
             this.errorTip = true;
           }
@@ -160,18 +164,31 @@ export default {
         })
     },
     /**
+     * 获取购物车数量
+     */
+    _getCartCount() {
+      axios.get('/users/getCartCount')
+        .then(res => {
+          if (res.data.status === 200) {
+            this.$store.commit('initCartCount', res.data.result);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    /**
      * 登出 
      */
     logOut() {
       axios.post('/users/logout')
         .then(res => {
-          (res.data.status === 200) && (this.nickName = '');
+          (res.data.status === 200) && (this.$store.commit('updateUserInfo', ''));
         })
         .catch(error => {
           console.log(error);
         })
-    },
-    closeLoginModal() {}
+    }
   }
 }
 </script>

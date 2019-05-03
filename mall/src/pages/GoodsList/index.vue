@@ -231,6 +231,7 @@ export default {
         if (res.data.status == 200) {
           // 加入购物车成功，成功的模态框显示
           this.mdShowCart = true;
+          this.$store.commit("updateCartCount", 1);
         } else {
           // 未登录模态框显示
           this.mdShow = true;
