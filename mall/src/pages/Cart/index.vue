@@ -39,7 +39,7 @@
       </defs>
     </svg>
     
-     <!-- 头部组件 -->
+    <!-- 头部组件 -->
     <nav-header></nav-header>
     <!-- 面包屑组件 -->
     <nav-bread>
@@ -135,7 +135,7 @@
                 总价: <span class="total-price">{{ totalPrice | currency('￥') }}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" :class="{ 'btn--dis': 0 }" @click="checkOut">结算</a>
+                <a class="btn btn--red" :class="{ 'btn--dis': checkedCount === 0 }" @click="checkOut">结算</a>
               </div>
             </div>
           </div>
@@ -160,7 +160,7 @@ import NavHeader from '@/components/NavHeader';
 import NavBread from '@/components/NavBread';
 import NavFooter from '@/components/NavFooter';
 import Modal from '@/components/Modal';
-import { currency } from '@/util/currency'  // 对价格格式化的通用方法
+import { currency } from '@/util/currency';  // 对价格格式化的通用方法
 import axios from 'axios';
 
 export default {
@@ -175,7 +175,7 @@ export default {
     return {
       cartLists: [], // 购物车商品列表
       delItem: {}, // 要删除的商品
-      modalConfirm: false, // 模态框是否显示
+      modalConfirm: false // 模态框是否显示
     }
   },
   computed: {
@@ -301,7 +301,13 @@ export default {
             console.log(error);
           });
       },
-      checkOut() {}
+      /**
+       * 已勾选的商品种数 >0 时跳转到地址列表页
+       */
+      checkOut() {
+        (this.checkedCount > 0)
+          && this.$router.push({ name: 'Address' });
+      }
   }
 }
 </script>

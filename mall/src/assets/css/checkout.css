@@ -151,12 +151,12 @@ html {
 }
 
 .check-step li.cur {
-  border-color: #d1434a;
-  color: #d1434a;
+  border-color: #bc29e0;
+  color: #bc29e0;
 }
 
 .check-step li.cur:after {
-  background: #d1434a;
+  background: #bc29e0;
 }
 
 @media only screen and (max-width: 991px) {
@@ -200,6 +200,7 @@ html {
   overflow: hidden;
   cursor: pointer;
   color: #333;
+  font-weight: 700;
 }
 
 .addr-list li dt {
@@ -261,7 +262,7 @@ html {
 .addr-list li .addr-set-default, .addr-list li .addr-default {
   bottom: 18px;
   left: 20px;
-  color: #ee7a23;
+  color: #bc29e0;
 }
 
 .addr-list li:nth-child(4n) {
@@ -269,7 +270,7 @@ html {
 }
 
 .addr-list li:hover {
-  border-color: #ee7a23;
+  border-color: #bc29e0;
 }
 
 .addr-list li.addr-new {
@@ -298,7 +299,7 @@ html {
 }
 
 .addr-list li.check {
-  border-color: #ee7a23;
+  border-color: #bc29e0;
   border-width: 2px;
 }
 
@@ -826,7 +827,7 @@ html {
 }
 
 .shipping-method li.check, .shipping-method li:hover, .shipping-method-whiteglove li.check, .shipping-method-whiteglove li:hover {
-  border-color: #ee7a23;
+  border-color: #c226e9;
 }
 
 @media only screen and (max-width: 991px) {

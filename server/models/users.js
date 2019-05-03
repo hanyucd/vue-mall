@@ -15,7 +15,16 @@ let userSchema = new mongoose.Schema({
       productNum: String // 商品数量
     }
   ],
-  addressList: Array
+  addressList: [
+    {
+      addressId: String,
+      userName: String,
+      streetName: String,
+      postCode: Number,
+      tel: Number,
+      isDefault: Boolean
+    }
+  ]
 });
 
 module.exports = mongoose.model('User', userSchema);

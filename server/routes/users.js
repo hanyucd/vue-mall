@@ -180,4 +180,25 @@ router.post('/editCheckAll', function(req, res, enxt) {
   });
 });
 
+/****************************************************
+ * 查询用户地址接口
+ */
+router.get('/addressList', function(req, res, next) {
+  let userId = req.cookies.userId;
+
+  Users.findOne({ userId }, function(error, userDoc) {
+    if (error) {
+      res.json({
+        status: 500,
+        msg: error.message
+      });
+    } else {
+      res.json({
+        status: 200,
+        result: userDoc.addressList
+      });
+    }
+  });
+});
+
 module.exports = router;
