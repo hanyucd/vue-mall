@@ -18,8 +18,8 @@
 ## 项目运行
 ```bash
 # 导入数据到 MongoDB
-> mongoimport -d vue_mall -c goods --file './server/resource/vue_mall-goods.json'
-> mongoimport -d vue_mall -c users --file './server/resource/vue_mall-users.json'
+> mongoimport -d vue_mall -c goods --file ./server/resource/vue_mall-goods.json
+> mongoimport -d vue_mall -c users --file ./server/resource/vue_mall-users.json
 
 > cd server && npm install && npm start
 

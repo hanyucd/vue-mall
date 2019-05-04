@@ -38,6 +38,12 @@ router.post('/login', function(req, res, next) {
             userName: userDoc.userName
           }
         });
+      } else {
+        res.json({
+          status: 400,
+          msg: '账号密码错误',
+          result: ''
+        });
       }
     }
   });
