@@ -21,7 +21,7 @@
 > mongoimport -d vue_mall -c goods --file './server/resource/vue_mall-goods.json'
 > mongoimport -d vue_mall -c users --file './server/resource/vue_mall-users.json'
 
-> cd server && npm install
+> cd server && npm install && npm start
 
-> cd mall && npm install
+> cd mall && npm install && npm start
 ```
