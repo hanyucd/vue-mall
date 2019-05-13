@@ -168,8 +168,7 @@ router.post('/cartEdit', function(req, res, next) {
   // 更新数据
   Users.update(
     { userId, 'cartList.productId': productId }, 
-    { 'cartList.$.productNum': productNum },
-    { 'cartList.$.checked': checked },
+    { 'cartList.$.productNum': productNum , 'cartList.$.checked': checked },
     function(error, userDoc) {
       if (error) {
         res.json({
